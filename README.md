@@ -8,10 +8,10 @@ Features:
 * Blocks advertising/website link attempts
 * * Can configure to deal with people trying to circumvent
 * Chat Filter
-* * Two censor levels - Hard and Soft
-* * Words all configurable
-* * Soft censor
-* * * Allows players to choose if they want to see these words
+  * Two censor levels - Hard and Soft
+  * Words all configurable
+  * Soft censor
+    * Allows players to choose if they want to see these words
 * * Hard censor
 * * * Message is censored for all players
 * * Whitelist
