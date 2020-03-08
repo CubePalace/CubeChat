@@ -41,7 +41,6 @@ permissions:
       cubechat.togglefilter: true
       cubechat.checkfilter: true
       cubechat.forcefilter: true
-      cubechat.link: true
   cubechat.clearchat:
     description: Allows you to clear chat
   cubechat.clearchat.exempt:
@@ -78,5 +77,3 @@ permissions:
     description: Ability to check if a player has their filter on
   cubechat.forcefilter:
     description: Ability to force a player's filter on or off
-  cubechat.link:
-    description: Ability to post links in chat

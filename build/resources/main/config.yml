@@ -7,7 +7,7 @@ spamCooldown: 2500
 # Number of characters that can be different and still be censored in a word. Set to 0 to disable
 censorDistance: 2
 
-# List of things being used to replace "." in an IP or website
+# List of things being used to replace "." in an IP
 # For example, 127(dot)0(dot)0(dot)1
 # Parentheses and periods must be prefaced with a \\ i.e. "\\(dot\\)"
 adsplits:
