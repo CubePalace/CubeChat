@@ -73,3 +73,12 @@ Permissions:
   * You won't have a message cooldown
 * cubechat.link
   * You can post links in chat
+
+Known issues:
+* Players can bypass the chat filter by putting spaces within a word
+
+To-Do
+* Add more config options
+  * No permission message
+  * Toggle for filter matches to show in chat
+    * Useful to look for false positives
