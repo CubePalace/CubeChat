@@ -1,7 +1,7 @@
 name: CubeChat
 main: com.cubepalace.cubechat.CubeChat
 author: RoboticPlayer
-version: 0.1
+version: 1.0
 depend: [ProtocolLib]
 
 commands:
