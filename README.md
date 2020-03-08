@@ -1,6 +1,8 @@
 # CubeChat
  A complete and configurable chat management plugin for Minecraft servers
 
+ProtocolLib is required for this plugin to function!
+
 Features:
 * Automatically sets player messages to lowercase when they use too many capitals (configurable)
 * Automatically shortens messages when flooding the same character (configurable)
