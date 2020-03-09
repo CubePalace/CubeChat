@@ -113,7 +113,7 @@ public class Filter {
 			for (String swear : censor) {
 				for (String suffix : suffixes) {
 					if (msg.equals(swear + suffix)) {
-						instance.getLogger().info("1- Positive match for " + swear + suffix + " on \"" + msg + "\"");
+						//instance.getLogger().info("1- Positive match for " + swear + suffix + " on \"" + msg + "\"");
 						return true;
 					}
 				}
@@ -123,12 +123,12 @@ public class Filter {
 				for (String suffix : suffixes) {
 					if (swear.length() <= configDistance * 2 || msg.length() <= configDistance * 2) {
 						if (distance.apply(swear + suffix, msg) <= configDistance - 1) {
-							instance.getLogger().info("2 - Positive match for " + swear + suffix + " on \"" + msg + "\"");
+							//instance.getLogger().info("2 - Positive match for " + swear + suffix + " on \"" + msg + "\"");
 							return true;
 						}
 					} else {
 						if (distance.apply(swear + suffix, msg) <= configDistance) {
-							instance.getLogger().info("3 - Positive match for " + swear + suffix + " on \"" + msg + "\"");
+							//instance.getLogger().info("3 - Positive match for " + swear + suffix + " on \"" + msg + "\"");
 							return true;
 						}
 					}
