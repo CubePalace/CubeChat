@@ -24,15 +24,15 @@ Features:
   * Deals with players using other characters to circumvent filter
 
 Commands:
-* /togglefilter
+* `/togglefilter`
   * Toggles whether or not you see soft censored words
-* /clearchat
+* `/clearchat`
   * Clears the chat
-* /mutechat
+* `/mutechat`
   * Prevents players from talking in chat
-* /shadowmute
+* `/shadowmute`
   * Mutes a player without them knowing they're muted
-* /cubechat
+* `/cubechat`
   * Main command for the plugin
   * No arguments will show help menu
 
@@ -45,35 +45,35 @@ Permissions:
   * You can clear the chat
 * `cubechat.clearchat.exempt`
   * Your chat won't get cleared
-* cubechat.clearchat.silent
+* `cubechat.clearchat.silent`
   * You can use the "-s" argument to clear chat without showing your name
-* cubechat.mutechat
+* `cubechat.mutechat`
   * You can mute and unmute the chat
-* cubechat.mutechat.exempt
+* `cubechat.mutechat.exempt`
   * You can talk while the chat is muted
-* cubechat.mutechat.silent
+* `cubechat.mutechat.silent`
   * You can use the "-s" argument to mute the chat without showing your name
-* cubechat.mutechat.read
+* `cubechat.mutechat.read`
   * You can read attempted messages from players while the chat is muted (toggleable)
-* cubechat.shadowmute
+* `cubechat.shadowmute`
   * You can shadowmute players
-* cubechat.shadowmute.read
+* `cubechat.shadowmute.read`
   * You can read attempted messages from shadowmuted players (toggleable)
-* cubechat.togglefilter
+* `cubechat.togglefilter`
   * You can toggle your filter
-* cubechat.checkfilter
+* `cubechat.checkfilter`
   * You can check if a player's filter is on or off
-* cubechat.forcefilter
+* `cubechat.forcefilter`
   * You can force a player's filter to be on or off
-* cubechat.reload
+* `cubechat.reload`
   * You can reload the plugin
-* cubechat.caps.exempt
+* `cubechat.caps.exempt`
   * You are exempt from the capitals filter
-* cubechat.flood.exempt
+* `cubechat.flood.exempt`
   * You are exempt from the flood filter
-* cubechat.spam.exempt
+* `cubechat.spam.exempt`
   * You won't have a message cooldown
-* cubechat.link
+* `cubechat.link`
   * You can post links in chat
 
 Known issues:
