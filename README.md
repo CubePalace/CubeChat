@@ -37,13 +37,13 @@ Commands:
   * No arguments will show help menu
 
 Permissions:
-* cubechat.*
+* `cubechat.*`
   * Gives access to everything
-* cubechat.cmd
+* `cubechat.cmd`
   * You can do /cubechat
-* cubechat.clearchat
+* `cubechat.clearchat`
   * You can clear the chat
-* cubechat.clearchat.exempt
+* `cubechat.clearchat.exempt`
   * Your chat won't get cleared
 * cubechat.clearchat.silent
   * You can use the "-s" argument to clear chat without showing your name
