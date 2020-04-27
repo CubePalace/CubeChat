@@ -47,9 +47,10 @@ public class CubeChatCmd implements CommandExecutor {
 				ChatOptions options = instance.getOptions(uuid);
 
 				p.sendMessage(ChatColor.GOLD + "You will "
-						+ (options.canViewMuted() ? "now" : "no longer")
+						+ (!options.canViewMuted() ? "now" : "no longer")
 						+ " see player messages while the chat is muted");
 				options.setViewMuted(!options.canViewMuted());
+				instance.setOptions(uuid, options);
 				return true;
 			} else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("cubechat.reload")) {
 				PlayerFile.get().reload();
@@ -69,9 +70,10 @@ public class CubeChatCmd implements CommandExecutor {
 				ChatOptions options = instance.getOptions(uuid);
 				
 				p.sendMessage(ChatColor.GOLD + "You will "
-						+ (options.canViewShadowMuted() ? "now" : "no longer")
+						+ (!options.canViewShadowMuted() ? "now" : "no longer")
 						+ " messages from shadowmuted players");
 				options.setViewShadowMuted(!options.canViewShadowMuted());
+				instance.setOptions(uuid, options);
 				return true;
 			} else if (args[0].equalsIgnoreCase("checkfilter") && sender.hasPermission("cubechat.checkfilter")) {
 				if (args.length == 1) {

@@ -14,6 +14,7 @@ import com.cubepalace.cubechat.commands.MuteChat;
 import com.cubepalace.cubechat.commands.ShadowMute;
 import com.cubepalace.cubechat.commands.ToggleFilter;
 import com.cubepalace.cubechat.listeners.AdvertisingListener;
+import com.cubepalace.cubechat.listeners.FilterListener;
 import com.cubepalace.cubechat.listeners.MiscChatListener;
 import com.cubepalace.cubechat.listeners.MuteChatListener;
 import com.cubepalace.cubechat.listeners.ShadowMuteListener;
@@ -66,6 +67,7 @@ public class CubeChat extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new MuteChatListener(this), this);
 		getServer().getPluginManager().registerEvents(new ShadowMuteListener(this), this);
 		getServer().getPluginManager().registerEvents(new MiscChatListener(), this);
+		getServer().getPluginManager().registerEvents(new FilterListener(), this);
 		getServer().getPluginManager().registerEvents(new AdvertisingListener(this), this);
 		getCommand("clearchat").setExecutor(new ClearChat(this));
 		getCommand("mutechat").setExecutor(new MuteChat(this));
@@ -133,16 +135,25 @@ public class CubeChat extends JavaPlugin {
 	}
 	
 	public ChatOptions getOptions(UUID uuid) {
-		return options.containsKey(uuid) ? options.get(uuid) : ChatOptions.defaultOptions(uuid);
+		return options.containsKey(uuid) ? options.get(uuid) : newDefault(uuid);
+	}
+	
+	private ChatOptions newDefault(UUID uuid) {
+		ChatOptions playerOptions = ChatOptions.defaultOptions(uuid);
+		options.put(uuid, playerOptions);
+		listsChanged = true;
+		return playerOptions;
 	}
 	
 	public void setOptions(UUID uuid, ChatOptions options) {
 		this.options.put(uuid, options);
+		listsChanged = true;
 	}
 	
 	public void updateOptionsMap() {
 		options.clear();
 		options.putAll(PlayerFile.get().loadToMap());
+		listsChanged = true;
 	}
 
 	public Map<UUID, Long> getCooldowns() {

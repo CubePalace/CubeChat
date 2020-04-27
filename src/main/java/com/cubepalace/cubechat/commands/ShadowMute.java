@@ -48,8 +48,9 @@ public class ShadowMute implements CommandExecutor {
 			
 			ChatOptions options = instance.getOptions(uuid);
 			
-			sender.sendMessage(ChatColor.GREEN + args[0] + " is " + (options.isShadowMuted() ? "no longer" : "now") + " shadowmuted");
+			sender.sendMessage(ChatColor.GREEN + args[0] + " is " + (!options.isShadowMuted() ? "no longer" : "now") + " shadowmuted");
 			options.setShadowMuted(!options.isShadowMuted());
+			instance.setOptions(uuid, options);
 			return true;
 		}
 		return false;

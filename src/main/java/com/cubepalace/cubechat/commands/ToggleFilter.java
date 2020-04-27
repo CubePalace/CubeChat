@@ -37,9 +37,10 @@ public class ToggleFilter implements CommandExecutor {
 			ChatOptions options = instance.getOptions(uuid);
 			
 			boolean filter = options.hasFilter();
-			p.sendMessage(ChatColor.GOLD + "Your filter has been " + (filter ? "en" : "dis") + "abled");
+			p.sendMessage(ChatColor.GOLD + "Your filter has been " + (!filter ? "en" : "dis") + "abled");
 			
 			options.setFilter(!options.hasFilter());
+			instance.setOptions(uuid, options);
 			return true;
 		}
 		return false;

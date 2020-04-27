@@ -13,6 +13,7 @@ public class Filter {
 		msg = msg.replace("|", "i");
 		msg = msg.replace("$", "s");
 		msg = msg.replace("5", "s");
+		msg = msg.replace("9", "g");
 		msg = msg.replace(".", "");
 		msg = msg.replace(",", "");
 		msg = msg.replace(" ", "");
