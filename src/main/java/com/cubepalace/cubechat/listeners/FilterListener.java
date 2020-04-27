@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
 import com.cubepalace.cubechat.util.ConfigFile;
-import com.cubepalace.cubechat.util.Filter;
 
 public class FilterListener implements Listener {
 	
@@ -37,43 +36,27 @@ public class FilterListener implements Listener {
 						.collect(Collectors.toMap(k -> k, v -> CubeChat.get().getOptions(v.getUniqueId())));
 				Map<Player, String> messages = event.getRecipients().stream()
 						.collect(Collectors.toMap(k -> k, v -> message));
-				
-				System.out.println(messages.toString());
-				
-				/*
-				 * Your use of Filter.convert is backwards
-				 * You're converting the word from the config
-				 * You're supposed to convert the chat message
-				 * The way you have it right now doesn't do anything, it's only testing the raw word
-				 * 
-				 */
 
 				toggle.stream().forEach(word -> {
-					if(message.contains(word) || message.contains(Filter.convert(word))) {
+					if(construct(word).matcher(message).find()) {
 						recipients.forEach((k, v) -> {
-							String filtered = message;
+							String filtered = messages.get(k);
 							if(v.hasFilter()) {
-								k.sendMessage("player has filter on, word: " + word);
-								filtered = filter(message, word);
+								filtered = filter(messages.get(k), word);
 							}
-							k.sendMessage("test: " + filtered);
 							messages.replace(k, filtered);
 						});
 					}
 				});
 				
-				System.out.println(messages.toString());
-				
 				always.stream().forEach(word -> {
-					if(message.contains(word) || message.contains(Filter.convert(word))) {
+					if(construct(word).matcher(message).find()) {
 						messages.forEach((k, v) -> {
 							String filtered = filter(v, word);
 							messages.put(k, filtered);
 						});
 					}
 				});
-				
-				System.out.println(messages.toString());
 				
 				messages.forEach((k, v) -> {
 					k.sendMessage(v);
@@ -83,9 +66,25 @@ public class FilterListener implements Listener {
 	}
 	
 	private String filter(String message, String word) {
-		// ((§[a-f|r|k-o|0-9]{1})+|\b)((f\W+)(u\W+)(c\W+)(k)\b)
-		message = message.replaceAll(Pattern.compile("((§[a-f|r|k-o|0-9]{1})+|\\b)" + word + "\\b", Pattern.CASE_INSENSITIVE).pattern(), "****");
-		message = message.replaceAll(Pattern.compile("((§[a-f|r|k-o|0-9]{1})+|\\b)" + Filter.convert(word) + "\\b", Pattern.CASE_INSENSITIVE).pattern(), "****");
+		message = message.replaceAll(this.construct(word).pattern(), "****");
 		return message;
+	}
+	
+	/* 
+	 * This regex almost completely works, but certain combinations will still make it past.
+	 * Current bugs:
+	 * - b1tch is not caught
+	 * - n1gga is not caught
+	 * - f@ggot is not caught
+	 * - motherfucker will only censor "fucker" because "fuck" comes before "motherfuck" in the config
+	 */
+	
+	
+	private Pattern construct(String word) {
+		String sequence = "";
+		for(String character : word.split("")) {
+			sequence += "((" + character + "\\S*)|" + character + "(\\W|\\d|_)*)";
+		}
+		return Pattern.compile(sequence, Pattern.CASE_INSENSITIVE);
 	}
 }
