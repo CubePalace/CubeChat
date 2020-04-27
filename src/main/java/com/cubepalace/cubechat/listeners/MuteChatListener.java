@@ -1,11 +1,14 @@
 package com.cubepalace.cubechat.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
 
 public class MuteChatListener implements Listener {
@@ -23,7 +26,9 @@ public class MuteChatListener implements Listener {
 				return;
 			for (Player p : instance.getServer().getOnlinePlayers()) {
 				if (p.hasPermission("cubechat.mutechat.read")) {
-					if (!instance.getMutedChatIgnore().contains(p.getUniqueId())) {
+					UUID uuid = p.getUniqueId();
+					ChatOptions options = instance.getOptions(uuid);
+					if (options.canViewMuted()) {
 						p.sendMessage(ChatColor.DARK_GRAY + "[MutedChat] " + e.getPlayer().getName() + " tried to say: "
 								+ e.getMessage());
 					}

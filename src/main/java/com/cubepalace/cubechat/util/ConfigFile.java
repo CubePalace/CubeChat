@@ -10,11 +10,18 @@ import com.cubepalace.cubechat.CubeChat;
 
 public class ConfigFile {
 
+	private static ConfigFile instance;
+	
+	public static ConfigFile get() {
+		instance = (instance == null) ? new ConfigFile() : instance;
+		return instance;
+	}
+	
 	private File file;
 	private FileConfiguration config;
 	
-	public ConfigFile(CubeChat instance, String fileName) {
-		file = new File(instance.getDataFolder(), fileName);
+	private ConfigFile() {
+		file = new File(CubeChat.get().getDataFolder(), "config.yml");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();

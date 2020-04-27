@@ -8,7 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
+import com.cubepalace.cubechat.util.ConfigFile;
+import com.cubepalace.cubechat.util.PlayerFile;
 
 public class CubeChatCmd implements CommandExecutor {
 
@@ -26,6 +29,7 @@ public class CubeChatCmd implements CommandExecutor {
 				sender.sendMessage(instance.getNoPerm());
 				return true;
 			}
+			
 			if (args.length == 0) {
 				showHelp(sender);
 				return true;
@@ -36,24 +40,24 @@ public class CubeChatCmd implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + "The console cannot use this command");
 					return true;
 				}
+				
 				Player p = (Player) sender;
 				UUID uuid = p.getUniqueId();
+				
+				ChatOptions options = instance.getOptions(uuid);
 
 				p.sendMessage(ChatColor.GOLD + "You will "
-						+ (instance.getMutedChatIgnore().contains(uuid) ? "now" : "no longer")
+						+ (options.canViewMuted() ? "now" : "no longer")
 						+ " see player messages while the chat is muted");
-				if (instance.getMutedChatIgnore().contains(uuid))
-					instance.removeIgnoreMutedChat(uuid);
-				else
-					instance.addIgnoreMutedChat(uuid);
+				options.setViewMuted(!options.canViewMuted());
 				return true;
-			}else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("cubechat.reload")) {
-				instance.getPlayerFile().reload();
-				instance.getConfigFile().reload();
-				instance.getFilter().updateLists();;
+			} else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("cubechat.reload")) {
+				PlayerFile.get().reload();
+				ConfigFile.get().reload();
+				instance.updateOptionsMap();
 				sender.sendMessage(ChatColor.GOLD + "CubeChat has been reloaded");
 				return true;
-			}else if (args[0].equalsIgnoreCase("shadowread") && sender.hasPermission("cubechat.shadowmute.read")) {
+			} else if (args[0].equalsIgnoreCase("shadowread") && sender.hasPermission("cubechat.shadowmute.read")) {
 				if (!(sender instanceof Player)) {
 					sender.sendMessage(ChatColor.RED + "The console cannot use this command");
 					return true;
@@ -61,13 +65,13 @@ public class CubeChatCmd implements CommandExecutor {
 
 				Player p = (Player) sender;
 				UUID uuid = p.getUniqueId();
+				
+				ChatOptions options = instance.getOptions(uuid);
+				
 				p.sendMessage(ChatColor.GOLD + "You will "
-						+ (instance.getIgnoreShadowmuted().contains(uuid) ? "now" : "no longer")
+						+ (options.canViewShadowMuted() ? "now" : "no longer")
 						+ " messages from shadowmuted players");
-				if (instance.getIgnoreShadowmuted().contains(uuid))
-					instance.removeIgnoreShadowmuted(uuid);
-				else
-					instance.addIgnoreShadowmuted(uuid);
+				options.setViewShadowMuted(!options.canViewShadowMuted());
 				return true;
 			} else if (args[0].equalsIgnoreCase("checkfilter") && sender.hasPermission("cubechat.checkfilter")) {
 				if (args.length == 1) {
@@ -82,7 +86,9 @@ public class CubeChatCmd implements CommandExecutor {
 				else
 					uuid = target.getUniqueId();
 				
-				sender.sendMessage(ChatColor.GOLD + args[1] + " currently does " + (instance.getNoFilter().contains(uuid) ? "not " : "") + "have their filter enabled");
+				ChatOptions options = instance.getOptions(uuid);
+				
+				sender.sendMessage(ChatColor.GOLD + args[1] + " currently does " + (options.hasFilter() ? "" : "not ") + "have their filter enabled");
 				return true;
 			} else if (args[0].equalsIgnoreCase("shadowmuted") && sender.hasPermission("cubechat.shadowmuted")) {
 				if (args.length == 1) {
@@ -97,7 +103,9 @@ public class CubeChatCmd implements CommandExecutor {
 				else
 					uuid = target.getUniqueId();
 				
-				sender.sendMessage(ChatColor.GOLD + args[1] + " currently is " + (instance.getShadowmuted().contains(uuid) ? "" : "not ") + "shadowmuted");
+				ChatOptions options = instance.getOptions(uuid);
+				
+				sender.sendMessage(ChatColor.GOLD + args[1] + " currently is " + (options.isShadowMuted() ? "" : "not ") + "shadowmuted");
 				return true;
 			} else if (args[0].equalsIgnoreCase("forcefilter") && sender.hasPermission("cubechat.forcefilter")) {
 				if (args.length < 3) {
@@ -117,10 +125,14 @@ public class CubeChatCmd implements CommandExecutor {
 				else
 					uuid = target.getUniqueId();
 				
+				ChatOptions options = instance.getOptions(uuid);
+				
 				if (args[2].equalsIgnoreCase("on")) {
-					instance.removeNoFilter(uuid);
+					options.setFilter(true);
+					instance.setOptions(uuid, options);
 				} else {
-					instance.addNoFilter(uuid);
+					options.setFilter(false);
+					instance.setOptions(uuid, options);
 				}
 				
 				sender.sendMessage(ChatColor.GOLD + args[1] + "'s filter has been forcibly " + (args[2].equalsIgnoreCase("on") ? "en" : "dis") + "abled");

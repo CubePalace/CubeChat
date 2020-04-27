@@ -1,11 +1,14 @@
 package com.cubepalace.cubechat.commands;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
 
 public class ToggleFilter implements CommandExecutor {
@@ -29,14 +32,14 @@ public class ToggleFilter implements CommandExecutor {
 				return true;
 			}
 			
-			Player p = (Player) sender; 
-			boolean filter = instance.getNoFilter().contains(p.getUniqueId());
+			Player p = (Player) sender;
+			UUID uuid = p.getUniqueId();
+			ChatOptions options = instance.getOptions(uuid);
+			
+			boolean filter = options.hasFilter();
 			p.sendMessage(ChatColor.GOLD + "Your filter has been " + (filter ? "en" : "dis") + "abled");
 			
-			if (instance.getNoFilter().contains(p.getUniqueId()))
-				instance.removeNoFilter(p.getUniqueId());
-			else
-				instance.addNoFilter(p.getUniqueId());
+			options.setFilter(!options.hasFilter());
 			return true;
 		}
 		return false;

@@ -7,13 +7,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.cubepalace.cubechat.CubeChat;
+import com.cubepalace.cubechat.util.ConfigFile;
 
 public class AdvertisingListener implements Listener {
 
 	private List<String> splits;
 
 	public AdvertisingListener(CubeChat instance) {
-		splits = instance.getCustomConfig().getStringList("adsplits");
+		splits = ConfigFile.get().getConfig().getStringList("adsplits");
 	}
 
 	@EventHandler

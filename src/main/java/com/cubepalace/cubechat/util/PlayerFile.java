@@ -2,24 +2,30 @@ package com.cubepalace.cubechat.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
 
 public class PlayerFile {
 
-	private CubeChat instance;
+	private static PlayerFile instance;
+	
+	public static PlayerFile get() {
+		instance = (instance == null) ? new PlayerFile() : instance;
+		return instance;
+	}
+	
 	private File file;
 	private FileConfiguration config;
 	
-	public PlayerFile(CubeChat instance, String fileName) {
-		this.instance = instance;
-		file = new File(instance.getDataFolder(), fileName);
+	private PlayerFile() {
+		file = new File(CubeChat.get().getDataFolder(), "players.yml");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -28,6 +34,14 @@ public class PlayerFile {
 			}
 		}
 		config = YamlConfiguration.loadConfiguration(file);
+		loadDefaults();
+	}
+	
+	private void loadDefaults() {
+		if(!config.isSet("players"))
+			config.createSection("players");
+		config.options().copyDefaults(true);
+		save();
 	}
 	
 	public void save() {
@@ -42,85 +56,37 @@ public class PlayerFile {
 		config = YamlConfiguration.loadConfiguration(file);
 		save();
 	}
-	
-	public void updateMuteChatList() {
-		List<UUID> uuidList = instance.getMutedChatIgnore();
-		List<String> stringList = new ArrayList<String>();
-		for (UUID uuid : uuidList) {
-			stringList.add(uuid.toString());
-		}
-		config.set("noreadmutedchat", stringList);
+
+	public void setPlayerOptions(UUID uuid, ChatOptions options) {
+		String player = "players." + uuid + ".";
+		config.set(player + "name", options.getName());
+		config.set(player + "viewMuted", options.canViewMuted());
+		config.set(player + "viewShadowMuted", options.canViewShadowMuted());
+		config.set(player + "isShadowMuted", options.isShadowMuted());
+		config.set(player + "filter", options.hasFilter());
+		reload();
 		save();
 	}
 	
-	public List<UUID> loadToListMuteChat() {
-		List<UUID> list = new ArrayList<UUID>();
-		
-		for (String uuidStr : config.getStringList("noreadmutedchat")) {
-			UUID uuid = UUID.fromString(uuidStr);
-			list.add(uuid);
-		}
-		return list;
+	public ChatOptions getPlayerOptions(UUID uuid) {
+		String player = "players." + uuid + ".";
+		ChatOptions options = new ChatOptions();
+		options.setUniqueId(uuid);
+		options.setName(config.getString(player + "name"));
+		options.setViewMuted(config.getBoolean(player + "viewMuted"));
+		options.setViewShadowMuted(config.getBoolean(player + "viewShadowMuted"));
+		options.setShadowMuted(config.getBoolean(player + "isShadowMuted"));
+		options.setFilter(config.getBoolean(player + "filter"));
+		return options;
 	}
 	
-	public void updateIgnoreShadowmuted() {
-		List<UUID> uuidList = instance.getIgnoreShadowmuted();
-		List<String> stringList = new ArrayList<String>();
-		for (UUID uuid : uuidList) {
-			stringList.add(uuid.toString());
-		}
-		config.set("noreadshadowmuted", stringList);
-		save();
+	public Map<UUID, ChatOptions> loadToMap() {
+		Map<UUID, ChatOptions> options = new HashMap<>();
+		config.getConfigurationSection("players").getKeys(false).forEach(p -> {
+			UUID uuid = UUID.fromString(p);
+			options.put(uuid, this.getPlayerOptions(uuid));
+		});
+		return options;
 	}
 	
-	public List<UUID> loadToListIgnoreShadowmuted() {
-		List<UUID> list = new ArrayList<UUID>();
-		
-		for (String uuidStr : config.getStringList("noreadshadowmuted")) {
-			UUID uuid = UUID.fromString(uuidStr);
-			list.add(uuid);
-		}
-		return list;
-	}
-	
-	public void updateShadowmuted() {
-		List<UUID> uuidList = instance.getShadowmuted();
-		List<String> stringList = new ArrayList<String>();
-		for (UUID uuid : uuidList) {
-			stringList.add(uuid.toString());
-		}
-		config.set("shadowmuted", stringList);
-		save();
-	}
-	
-	public List<UUID> loadToListShadowmuted() {
-		List<UUID> list = new ArrayList<UUID>();
-		
-		for (String uuidStr : config.getStringList("shadowmuted")) {
-			UUID uuid = UUID.fromString(uuidStr);
-			list.add(uuid);
-		}
-		return list;
-	}
-	
-	public void updateNoFilter() {
-		List<UUID> uuidList = instance.getNoFilter();
-		List<String> stringList = new ArrayList<String>();
-		for (UUID uuid : uuidList) {
-			stringList.add(uuid.toString());
-		}
-		config.set("nofilter", stringList);
-		save();
-	}
-	
-	public List<UUID> loadToListNoFilter() {
-		List<UUID> list = new ArrayList<UUID>();
-		
-		for (String uuidStr : config.getStringList("nofilter")) {
-			UUID uuid = UUID.fromString(uuidStr);
-			list.add(uuid);
-		}
-		return list;
-		
-	}
 }

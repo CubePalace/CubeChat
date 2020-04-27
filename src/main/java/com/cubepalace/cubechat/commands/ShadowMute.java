@@ -9,13 +9,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cubepalace.cubechat.ChatOptions;
 import com.cubepalace.cubechat.CubeChat;
 
-public class Shadowmute implements CommandExecutor {
+public class ShadowMute implements CommandExecutor {
 	
 	private CubeChat instance;
 	
-	public Shadowmute(CubeChat instance) {
+	public ShadowMute(CubeChat instance) {
 		this.instance = instance;
 	}
 	
@@ -45,11 +46,10 @@ public class Shadowmute implements CommandExecutor {
 				uuid = target.getUniqueId();
 			}
 			
-			sender.sendMessage(ChatColor.GREEN + args[0] + " is " + (instance.getShadowmuted().contains(uuid) ? "no longer" : "now") + " shadowmuted");
-			if (instance.getShadowmuted().contains(uuid))
-				instance.removeShadowmuted(uuid);
-			else
-				instance.addShadowmuted(uuid);
+			ChatOptions options = instance.getOptions(uuid);
+			
+			sender.sendMessage(ChatColor.GREEN + args[0] + " is " + (options.isShadowMuted() ? "no longer" : "now") + " shadowmuted");
+			options.setShadowMuted(!options.isShadowMuted());
 			return true;
 		}
 		return false;
