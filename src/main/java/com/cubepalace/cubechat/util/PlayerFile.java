@@ -64,7 +64,6 @@ public class PlayerFile {
 		config.set(player + "viewShadowMuted", options.canViewShadowMuted());
 		config.set(player + "isShadowMuted", options.isShadowMuted());
 		config.set(player + "filter", options.hasFilter());
-		reload();
 		save();
 	}
 	
