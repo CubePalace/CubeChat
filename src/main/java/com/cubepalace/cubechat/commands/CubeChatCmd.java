@@ -71,7 +71,7 @@ public class CubeChatCmd implements CommandExecutor {
 				
 				p.sendMessage(ChatColor.GOLD + "You will "
 						+ (!options.canViewShadowMuted() ? "now" : "no longer")
-						+ " messages from shadowmuted players");
+						+ " see messages from shadowmuted players");
 				options.setViewShadowMuted(!options.canViewShadowMuted());
 				instance.setOptions(uuid, options);
 				return true;
