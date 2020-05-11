@@ -1,25 +1,30 @@
 package com.cubepalace.cubechat.util;
 
+import java.util.*;
+
 public class Filter {
 
-	public static String convert(String input) {
-		String msg = input;
-		msg = msg.replace("4", "a");
-		msg = msg.replace("@", "a");
-		msg = msg.replace("<", "c");
-		msg = msg.replace("3", "e");
-		msg = msg.replace("1", "i");
-		msg = msg.replace("!", "i");
-		msg = msg.replace("|", "i");
-		msg = msg.replace("$", "s");
-		msg = msg.replace("5", "s");
-		msg = msg.replace("9", "g");
-		msg = msg.replace(".", "");
-		msg = msg.replace(",", "");
-		msg = msg.replace(" ", "");
-		msg = msg.replace("/", "");
-		msg = msg.replace("-", "");
-		return msg;
+	private static Map<Character, List<Character>> conversions = new HashMap<>();
+
+	static {
+		addEntry('a', '4', '@');
+		addEntry('c', '<');
+		addEntry('e', '3');
+		addEntry('i', '1', '!', '|');
+		addEntry('s', '$');
+		addEntry('g', '9');
+	}
+
+	public static boolean hasReplacement(char character) {
+		return conversions.containsKey(character);
+	}
+
+	public static List<Character> getReplacements(char character) {
+		return conversions.get(character);
+	}
+
+	private static void addEntry(Character key, Character... value) {
+		conversions.put(key, Arrays.asList(value));
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.cubepalace.cubechat.util.Filter;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -73,18 +75,21 @@ public class FilterListener implements Listener {
 	/* 
 	 * This regex almost completely works, but certain combinations will still make it past.
 	 * Current bugs:
-	 * - b1tch is not caught
-	 * - n1gga is not caught
-	 * - f@ggot is not caught
 	 * - motherfucker will only censor "fucker" because "fuck" comes before "motherfuck" in the config
 	 */
 	
-	
 	private Pattern construct(String word) {
-		String sequence = "";
+		StringBuilder sequence = new StringBuilder();
 		for(String character : word.split("")) {
-			sequence += "((" + character + "\\S*)|" + character + "(\\W|\\d|_)*)";
+			sequence.append('(');
+			// Add any necessary character checks
+			if(Filter.hasReplacement(character.charAt(0)))
+				Filter.getReplacements(character.charAt(0)).forEach(c -> {
+					String safe = StringEscapeUtils.escapeJava(String.valueOf(c));
+					sequence.append('(').append(safe).append("\\S*)|");
+				});
+			sequence.append('(').append(character).append("\\S*)|").append(character).append("(\\W|\\d|_)*)");
 		}
-		return Pattern.compile(sequence, Pattern.CASE_INSENSITIVE);
+		return Pattern.compile(sequence.toString(), Pattern.CASE_INSENSITIVE);
 	}
 }
